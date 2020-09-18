@@ -3,8 +3,8 @@ importScripts('src/js/idb.js');
 importScripts('src/js/utility.js');
 
 // quando cambi questi valori modificali anche in view/layouts/js_sw.php
-var CACHE_STATIC_NAME = 'bolt-static-007';
-var CACHE_DYNAMIC_NAME = 'bolt-dynamic-007';
+var CACHE_STATIC_NAME = 'fidelize-static-007';
+var CACHE_DYNAMIC_NAME = 'fidelize-dynamic-007';
 var STATIC_FILES = [
 	'/',
 	'offline.php',
@@ -472,7 +472,7 @@ self.addEventListener('sync', function(event) {
 						// se esce negativo non fa nulla. se esce positivo invia allarme
 						if (json.success){
 							console.log('[Service worker] Risposta di covid Countdown',json);
-							const title = '[Bolt] - Alert';
+							const title = '[fidelize] - Alert';
 							const options = {
 								body: dt.message,
 								icon: 'src/images/icons/app-icon-96x96.png',

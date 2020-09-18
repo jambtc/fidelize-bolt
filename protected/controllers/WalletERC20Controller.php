@@ -269,16 +269,14 @@ class WalletERC20Controller extends Controller
 	 */
 	 public function actionSend()
 	 {
-		//echo '<pre>post: '.print_r($_POST,true).'</pre>';
-		#exit;
+		// echo '<pre>post: '.print_r($_POST,true).'</pre>';
+		// exit;
 
 		$fromAccount = $_POST['from'];
  		$toAccount = $_POST['to'];
  		$amount = $_POST['amount'];
 
 		$memo = $_POST['memo'];
-		//$gas = $_POST['gas'];
-		//$gas = '0x'. dechex(pow($_POST['gas'],8));
 
 		$pow = $_POST['gas'] * pow(10,10);
 		$hex = dechex($pow);
@@ -294,12 +292,10 @@ class WalletERC20Controller extends Controller
 			));
 			exit;
 		}
-		//echo '<pre>$prv_key: '.print_r($prv_key,true).'</pre>';
+		// echo '<pre>$prv_key: '.print_r($prv_key,true).'</pre>';
 		// echo '<pre>pow: '.print_r($pow,true).'</pre>';
 		// echo '<pre>gas: '.print_r($gas,true).'</pre>';
-		//
 		// exit;
-
 
 
 		//Carico i parametri
@@ -330,96 +326,88 @@ class WalletERC20Controller extends Controller
 			'amount' => self::Encode("uint", $amountForContract), //$amount l'ammontare della transazione (da moltiplicare per 10^2)
 		];
 
-		//if( webRequest::checkUrl( $settings->poa_url ) ) {
 			// recupero la nonce per l'account
-			$nonce = 0;
-			// $web3 = new Web3($settings->poa_url);
-			// $web3 = new Web3(WebApp::getPoaNode());
-			$poaNode = WebApp::getPoaNode();
-			if (!$poaNode){
-				$save = new Save;
-				$save->WriteLog('bolt','walletERC20','send',"All Nodes are down.");
+		$nonce = 0;
+		$poaNode = WebApp::getPoaNode();
+		if (!$poaNode){
+			$save = new Save;
+			$save->WriteLog('bolt','walletERC20','send',"All Nodes are down.");
+			echo CJSON::encode(array(
+				"error"=>"All Nodes are down.",
+				'id'=>time()
+			));
+			exit;
+		}else{
+			$web3 = new Web3($poaNode);
+		}
+
+		// echo '<pre>data_tx: '.print_r($data_tx,true).'</pre>';
+
+		$web3->eth->getTransactionCount($fromAccount, function ($err, $res) use (&$nonce) {
+			if($err !== null) {
 				echo CJSON::encode(array(
-					"error"=>"All Nodes are down.",
+					"error"=>$err->getMessage(),
+					"getTransactionCount"=>'error',
 					'id'=>time()
 				));
 				exit;
-			}else{
-				$web3 = new Web3($poaNode);
 			}
+			$nonce = $res;
+		});
 
-			$web3->eth->getTransactionCount($fromAccount, function ($err, $res) use (&$nonce) {
-				if($err !== null) {
-					echo CJSON::encode(array(
-						"error"=>$err->getMessage(),
-						"getTransactionCount"=>'error',
-						'id'=>time()
-					));
-					exit;
-				}
-				$nonce = $res;
-			});
+		// echo '<pre>[ricerca nonce] '.print_r('0x'.dechex(gmp_intval($nonce->value)),true).'</pre>';
+		// exit;
 
-				// echo '<pre>ERRORE: [ricerca nonce] '.print_r('0x'.dechex(gmp_intval($nonce->value)),true).'</pre>';
-				// exit;
+		self::setNonce(gmp_intval($nonce->value));
 
-			self::setNonce(gmp_intval($nonce->value));
+		while (self::getNonce() < 1000)
+		{
+			$transaction = new Transaction([
+			  'nonce' => '0x'.dechex(self::getNonce()), //è un object BigInteger
+				'from' => $fromAccount, //indirizzo commerciante
+				'to' => $settings->poa_contractAddress, //indirizzo contratto
+				'gas' => '0x200b20', // $gas se supera l'importo 0x200b20 va in eerrore gas exceed limit !!!!!!
+				'gasPrice' => '1000', // gasPrice giusto?
+				'value' => '0',
+				'chainId' => $settings->poa_chainId,
+				'data' =>  $data_tx['selector'] . $data_tx['address'] . $data_tx['amount'],
+			]);
 
-			while (self::getNonce() < 1000)
-			{
-				$transaction = new Transaction([
-				   'nonce' => '0x'.dechex(self::getNonce()), //è un object BigInteger
-				   'from' => $fromAccount, //indirizzo commerciante
-				   'to' => $settings->poa_contractAddress, //indirizzo contratto
-				   'gas' => '0x200b20', // $gas se supera l'importo 0x200b20 va in eerrore gas exceed limit !!!!!!
-				   'gasPrice' => '1000', // gasPrice giusto?
-				   'value' => '0',
-				   'chainId' => $settings->poa_chainId,
-				   'data' =>  $data_tx['selector'] . $data_tx['address'] . $data_tx['amount'],
-			    ]);
+			$transaction->offsetSet('chainId', $settings->poa_chainId);
+			// echo '<pre>Transazione: '.print_r($transaction,true).'</pre>';
+			// exit;
 
-				$transaction->offsetSet('chainId', $settings->poa_chainId);
-				// echo '<pre>Transazione: '.print_r($transaction,true).'</pre>';
-				// echo '<pre>$prv_key: '.print_r($prv_key,true).'</pre>';
-				// echo '<pre>$_POST: '.print_r($_POST,true).'</pre>';
-				// exit;
-				$signed_transaction = $transaction->sign($prv_key); // la chiave derivata da json js AES to PHP
-				#echo '<pre>Transazione firmata: '.print_r($signed_transaction,true).'</pre>';
+			$signed_transaction = $transaction->sign($prv_key); // la chiave derivata da json js AES to PHP
+			// echo '<pre>Transazione firmata: '.print_r($signed_transaction,true).'</pre>';
+			// exit;
 
-				$web3->eth->sendRawTransaction(sprintf('0x%s', $signed_transaction), function ($err, $tx) {
-					if ($err !== null) {
-						$jsonBody = $this->getJsonBody($err->getMessage());
-						// (
-    				// 	[jsonrpc] => 2.0
-    				// 	[id] => 800379331
-    				// 	[error] => Array
-        		// 	(
-            // 			[code] => -32001
-            // 			[message] => Nonce too low
-        		// 	)
-						// )
-						// echo '<pre>ERRORE: [ricerca nonce] '.print_r($this->getJsonBody($err->getMessage()),true).'</pre>';
-						// exit;
-						if ($jsonBody['error']['code'] == -32001){
-							$count = self::getNonce() +1;
-							self::setNonce($count);
-						}else{
-							echo CJSON::encode(array(
-								"error"=>'Error: '.$jsonBody['error']['message'],
-								'id'=>time()
-							));
-							exit;
-						}
+			$web3->eth->sendRawTransaction(sprintf('0x%s', $signed_transaction), function ($err, $tx) {
+				if ($err !== null) {
+					$jsonBody = $this->getJsonBody($err->getMessage());
+
+					// echo '<pre>[response] '.var_dump($jsonBody,true).'</pre>';
+					// exit;
+					if ($jsonBody === NULL){
+						$count = self::getNonce() +1;
+						self::setNonce($count);
+					}else{
+						echo CJSON::encode(array(
+							"error"=>'Nonce error: '.$jsonBody['error']['message'],
+							'id'=>time()
+						));
+						exit;
 					}
-					//echo 'TX: ' . $tx;
-					//exit;
-					self::setTransaction($tx);
-
-				});
-				if (self::getTransaction() !== null){
-					break;
 				}
+				// echo 'TX: ' . $tx;
+				// exit;
+				self::setTransaction($tx);
+
+			});
+			if (self::getTransaction() !== null){
+				break;
 			}
+		}
+
 			// echo '<pre>ERRORE: [get nonce] '.print_r(self::getNonce(),true).'</pre>';
 			// exit;
 			//
@@ -507,7 +495,7 @@ class WalletERC20Controller extends Controller
 				'id' => $invoice_timestamp, //NECESSARIO PER IL SALVATAGGIO IN  indexedDB quando ritorna al Service Worker
 	 			'id_token' => crypt::Encrypt($tokens->id_token),
 	 			'data'	=> WebApp::dateLN($invoice_timestamp,$tokens->id_token),
-	 			'status' => WebApp::walletStatus($tokens->status),
+	 			'status' => WebApp::walletIconStatus($tokens->status),
 				'token_price' => WebApp::typePrice($tokens->token_price,'sent'),
 				// 'from_address' => substr($fromAccount,0,7).'&hellip;',
 				// 'to_address' => substr($toAccount,0,7).'&hellip;',
@@ -547,8 +535,8 @@ class WalletERC20Controller extends Controller
 		echo CJSON::encode(array(
 			'id' => time(), //NECESSARIO PER IL SALVATAGGIO IN  indexedDB quando ritorna al Service Worker
 			"status"=>$model->status,
-			//"status_wlink"=>"<a href='index.php?r=tokens/view&id=".crypt::Encrypt($model->id_token)."'>". WebApp::walletStatus($model->status) ."</a>",
-			"status_wlink"=>WebApp::translateMsg($model->status),
+			// "status_wlink"=>WebApp::translateMsg($model->status),
+			"status_wlink"=>WebApp::walletIconOnlyStatus($model->status),
 			"openUrl"=>Yii::app()->createUrl('tokens/view',array('id'=>crypt::Encrypt($model->id_token))), // url per i messaggi push
 			'to_address'=>$model->to_address,
 			'from_address'=>$model->from_address,

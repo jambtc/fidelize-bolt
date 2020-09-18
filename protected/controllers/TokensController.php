@@ -58,7 +58,7 @@ class TokensController extends Controller
 
 	public function actionStatus()
 	{
-		$result['status'] = WebApp::walletStatus($_POST['status']);
+		$result['status'] = WebApp::walletIconStatus($_POST['status']);
 		echo CJSON::encode($result);
 	}
 

@@ -1,4 +1,4 @@
-var dbPromise = idb.open('bolt', 1, function(db) {
+var dbPromise = idb.open('fidelize', 1, function(db) {
 
 	//store per sincronizzazione ricezione
 	if (!db.objectStoreNames.contains('sync-receive'))

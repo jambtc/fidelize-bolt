@@ -149,11 +149,13 @@ $(function(){
 		//analizza la risposta da txpool
 		responseTxPool: function(data){
 			console.log('[ResponseTxPool]: (check if exist id_token) ',data);
+			console.log('[ResponseTxPool: check for data status_wlink]',data.status_wlink);
 			if (data.status !== 'new'){
 				//$( ".__sending_now-"+data.id_token+' a span').text(Yii.t('js',data.status)).fadeIn(1600);
 				$( ".__sending_now-"+data.id_token+' a span').html(data.status_wlink).fadeIn(1600);
 				$( ".__sending_now-"+data.id_token+' a span').removeClass( "incorso" );
-				$( ".__sending_now-"+data.id_token+' a span').removeClass( "btn-outline-seconary" );
+				$( ".__sending_now-"+data.id_token+' a span').removeClass( "btn-outline-secondary" );
+				$( ".__sending_now-"+data.id_token+' a span').removeClass( "btn-success" );
 				$( ".__sending_now-"+data.id_token+' a span').addClass( "btn btn-outline-success" );
 
 				$( ".__sending_now_price-"+data.id_token ).html(data.token_price_wsymbol);

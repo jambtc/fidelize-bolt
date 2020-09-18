@@ -33,7 +33,7 @@ return array (
   'New message' => 'Nuovo messaggio',
   'Token' => 'Token',
   'You have sent a new "{alias}" transaction.' => 'Hai inviato una nuova transazione "{alias}".',
-  'complete' => 'completata',
+  'complete' => 'Completata',
   'new' => 'nuova',
   'You have sent a new transaction.' => 'Hai inviato una nuova transazione.',
   'A transaction you received has been completed.' => 'Una transazione che hai ricevuto è stata completata.',

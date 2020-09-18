@@ -2,8 +2,8 @@
 $serviceWorker = <<<JS
 
   // quando cambi questi valori modificali anche in sw.js
-    var CACHE_STATIC_NAME = 'bolt-static-007';
-    var CACHE_DYNAMIC_NAME = 'bolt-dynamic-007';
+    var CACHE_STATIC_NAME = 'fidelize-static-007';
+    var CACHE_DYNAMIC_NAME = 'fidelize-dynamic-007';
 
     function trimCache(cacheName, maxItems) {
     	caches.open(cacheName)

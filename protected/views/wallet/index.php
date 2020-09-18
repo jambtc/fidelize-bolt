@@ -93,7 +93,6 @@ $logoutURL = Yii::app()->createUrl('site/logout');
 					</div>
 					<div class="card-body">
 						<div class="table-responsive table--no-card m-b-30">
-							<!-- <table class="table table-borderless table-striped table-earning"> -->
 						<?php
 						Yii::import('zii.widgets.grid.CGridView');
 						class SpecialGridView extends CGridView {
@@ -118,51 +117,33 @@ $logoutURL = Yii::app()->createUrl('site/logout');
 							'columns' => array(
 								array(
 									'type'=>'raw',
-						            'name'=>'',
+						      'name'=>'',
 									'value'=>'WebApp::typeTransaction($data->type)',
 									'htmlOptions'=>array('style'=>'width:1px;'),
-
-						        ),
-
+						    ),
 								array(
 						      'name'=>'',
 									'type'=>'raw',
 									'value' => 'CHtml::link(WebApp::dateLN($data->invoice_timestamp,$data->id_token), Yii::app()->createUrl("tokens/view",["id"=>crypt::Encrypt($data->id_token)]) )',
-						      ),
+						    ),
 								array(
 									'type'=>'raw',
 						      'name'=>'',
-									'value'=>'CHtml::link(WebApp::walletStatus($data->status), Yii::app()->createUrl("tokens/view")."&id=".CHtml::encode(crypt::Encrypt($data->id_token)))',
+									'value'=>'CHtml::link(WebApp::walletIconStatus($data->status), Yii::app()->createUrl("tokens/view")."&id=".CHtml::encode(crypt::Encrypt($data->id_token)))',
 									'cssClassExpression' => '( $data->status == "sent" ) ? "denied" : (( $data->status == "complete" ) ? "process" : "desc incorso")',
-						        ),
+						    ),
 								array(
 									'type'=>'raw',
 						            'name'=>'',
 									'value'=>'WebApp::typePrice($data->token_price,(($data->from_address == $this->grid->from_address) ? "sent" : "received"))',
 									'htmlOptions'=>array('style'=>'text-align:center;'),
-						        ),
-
-								// [
-								// 	'type'=>'raw',
-						        //     'name'=>'fiat_price',
-								// 	'value'=>'$data->fiat_price',
-								// 	'visible'=>!$visible,
-						        // ],
-								//
-								// [
-								// 	'type'=>'raw',
-						        //     'name'=>'rate',
-								// 	'value'=>'$data->rate',
-								// 	'visible'=>!$visible,
-						        // ],
+						    ),
 								[
 									'type'=>'raw',
 									'name'=>'to_address',
-									// 'value'=>'CHtml::link($data->to_address, Yii::app()->createUrl("tokens/view")."&id=".CHtml::encode(crypt::Encrypt($data->id_token)))',
 									'value'=>'CHtml::link(($data->from_address == $this->grid->from_address ? $data->to_address : $data->from_address), Yii::app()->createUrl("tokens/view")."&id=".CHtml::encode(crypt::Encrypt($data->id_token)))',
 									'visible'=>!$visible,
 								],
-
 								array(
 									'type'=>'raw',
 									'name'=>'',
@@ -170,13 +151,6 @@ $logoutURL = Yii::app()->createUrl('site/logout');
 									'htmlOptions'=>array('style'=>'width:50px;'),
 
 								),
-								// array(
-								// 	'type'=>'raw',
-								// 	'name'=>'',
-								// 	'value'=>'Yii::app()->controller->isConfirmedNumber('.$actualBlockNumberDec.',$data->blocknumber)',
-								// 	'htmlOptions'=>array('style'=>'width:1px;'),
-								//
-								// ),
 							)
 						));
 						?>
@@ -201,17 +175,6 @@ $logoutURL = Yii::app()->createUrl('site/logout');
 				</button>
 			</div>
 			<div class="modal-body">
-				<!-- <div class="card"> -->
-					<!-- <div class="card-header"  style="font-size:2em;"> -->
-						<!-- <strong class="card-title mb-3">Balance: <span class="badge badge-light"><span class="mt-1 balance-erc20"></span></span></strong>
-						<i class="zmdi zmdi-star-outline"></i> -->
-					<!-- </div> -->
-					<!-- <div class="form-group">
-
-						<h4 class="card-title mb-3">Balance: </h4>
-					</div> -->
-					<!-- <div class="card-body"> -->
-
 						<div class="alert-dark ">
 							<div class="table-responsive">
 								<table class="table table-borderless table-wallet text-light">
@@ -243,30 +206,6 @@ $logoutURL = Yii::app()->createUrl('site/logout');
 												</div>
 											</td>
 										</tr>
-
-										<!-- ESEMPIO DI SWITCH -->
-										<!-- <tr>
-											<td colspan="2" style="padding: 0px;">
-												<table class="table table-borderless table-wallet">
-													<tr class="alert alert-secondary">
-														<td>
-															<p class="text-light"><?php //echo Yii::t('lang','Transaction cost');?>:</p>
-															<p class="text-light" id='gassing-text'><?php //echo Yii::t('lang','Standard');?></p>
-														</td>
-														<td>
-															<p id='gasPrice' class="text-danger"></p>
-															<p>
-																<label class="switch switch-3d switch-danger mr-3">
-																	<input type="checkbox" class="switch-input" id='gassing-value' >
-																	<span class="switch-label"></span>
-																	<span class="switch-handle"></span>
-											                    </label>
-															</p>
-														</td>
-													</tr>
-												</table>
-											</td>
-										</tr> -->
 									</tbody>
 								</table>
 							</div>
@@ -277,11 +216,7 @@ $logoutURL = Yii::app()->createUrl('site/logout');
 									<span aria-hidden="true">×</span>
 								</button>
 							</div>
-
 						</div>
-
-					<!-- </div> -->
-				<!-- </div> -->
 			</div>
 			<div class="modal-footer">
 				<button type="button" class="btn alert-secondary text-light" data-dismiss="modal" style="min-width: 100px; padding:2.5px 10px 2.5px 10px; height:30px;">

@@ -58,6 +58,12 @@ $myBlockchain = <<<JS
                 if (data.diff < 2)
                   $('.sync-star').addClass('text-success fa-spin');
 
+                if (data.diff < 240){
+                  $('.sync-difference').html('');
+                  $('.blockchain-pairing__loading').remove();
+                }
+                
+
                 if (data.diff > 240){ // 1 ora
                   $('.sync-blockchain').html('<div class="blockchain-pairing__loading"><center><img width=15 src="'+ajax_loader_url+'" alt="'+Yii.t('js','loading...')+'"></center></div>');
                   $('.sync-difference').html('<small>'+Yii.t('js','Synchronizing the blockchain: {number} blocks left.', {number:data.diff})+'</small>');
@@ -142,6 +148,7 @@ $myBlockchain = <<<JS
           if (data[0].success){
             console.log('[blockchain: readTransactions] np-transactions SUCCESS: ',data);
             for (var dt of data[0].transactions) {
+              console.log('[readTransactions: check for data status]',dt.status);
               blockchain.addNewRow(dt);
               eth.txFound(dt.id_token);
             }
@@ -237,7 +244,7 @@ $myBlockchain = <<<JS
 		// 	});
 		// },
     addNewRow: function(data){
-			$("<tr class='even animazione'>"
+			$("<tr class='even animazione main'>"
             +"<td><i class='zmdi zmdi-star-outline'></i></td>"
             +"<td><a href='"+data.url+"'>"+data.data+"</a></td>"
             +"<td class='desc __sending_now-"+data.id_token+"'><a href='"+data.url+"'>"+data.status+"</a></td>"
@@ -246,7 +253,7 @@ $myBlockchain = <<<JS
             +"<td style='width:50px;'><i class='fa fa-unlock ' style='color:red;'></i><span style='font-size:0.8em;'>1</span></td>"
             +"</tr>").prependTo("#tokens-grid table.items > tbody");
 
-              $('.animazione').addClass("animationTransaction");
+      $('.animazione').addClass("animationTransaction");
 		},
 	}
 

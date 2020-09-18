@@ -5,6 +5,7 @@ Yii::import('libs.NaPacks.WebApp');
 Yii::import('libs.NaPacks.SaveModels');
 Yii::import('libs.NaPacks.Save');
 Yii::import('libs.ethereum.eth');
+Yii::import('libs.Utils.Utils');
 
 require_once Yii::app()->params['libsPath'] . '/ethereum/web3/vendor/autoload.php';
 
@@ -229,7 +230,7 @@ class BlockchainController extends Controller
 						$this->setTransactionFound(array(
 							'id_token' => crypt::Encrypt($tokens->id_token),
 							'data' => WebApp::dateLN($tokens->invoice_timestamp,$tokens->id_token),
-							'status' => WebApp::walletStatus($tokens->status),
+							'status' => WebApp::walletIconStatus($tokens->status),
 							'token_price' => WebApp::typePrice($tokens->token_price,(strtoupper($transactionContract->from) == $SEARCH_ADDRESS ? 'sent' : 'received')),
 							'from_address' => $tokens->from_address,
 							'to_address' => $tokens->to_address,
@@ -300,8 +301,8 @@ class BlockchainController extends Controller
 
 		$chainBlock = $_POST['chainBlock'];
 
-		$filename = Yii::app()->basePath."/log/blockchain-search.log";
-		$myfile = fopen($filename, "a");
+		// $filename = Yii::app()->basePath."/log/blockchain-search.log";
+		// $myfile = fopen($filename, "a");
 
 		//carico info del wallet
 		$wallets = $this->loadWallet($_POST['search_address']);
@@ -445,7 +446,7 @@ class BlockchainController extends Controller
 										$this->setTransactionFound(array(
 											'id_token' => crypt::Encrypt($tokens->id_token),
 											'data' => WebApp::dateLN($tokens->invoice_timestamp,$tokens->id_token),
-											'status' => WebApp::walletStatus($tokens->status),
+											'status' => WebApp::walletIconStatus($tokens->status),
 											'token_price' => WebApp::typePrice($transactionValue,(strtoupper($transactionContract->from) == $SEARCH_ADDRESS ? 'sent' : 'received')),
 											'from_address' => $tokens->from_address,
 											'to_address' => $tokens->to_address,
@@ -490,7 +491,7 @@ class BlockchainController extends Controller
 												$this->setTransactionFound(array(
 													'id_token' => crypt::Encrypt($tokens->id_token),
 													'data' => WebApp::dateLN($tokens->invoice_timestamp,$tokens->id_token),
-													'status' => WebApp::walletStatus($tokens->status),
+													'status' => WebApp::walletIconStatus($tokens->status),
 													'token_price' => WebApp::typePrice($tokens->token_price,(strtoupper($transaction->from) == $SEARCH_ADDRESS ? 'sent' : 'received')),
 													'from_address' => $tokens->from_address,
 													'to_address' => $tokens->to_address,

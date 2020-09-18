@@ -56,12 +56,11 @@ class WalletController extends Controller
 			array('allow', // allow authenticated user to perform 'create' and 'update' actions
 				'actions'=>array(
 					'index',
-					'loadUserContacts', //carica i contatti (ajax)
-					'error', //pagina di errore
+
 					'saveAddress', // salva l'indirizzo creato da eth-lightwallet
 					'estimateGas',
 					'checkAddress',
-					'changeQrCode', //cambia il qrcode RICEVI quando si cambia indirizzo
+
 					'crypt', //cripta codice da js
 					'decrypt', //decripta codice da js
 					'rescan', // azzera il blocknumber del wallet, causando una rescansione della blockchain
@@ -134,20 +133,6 @@ class WalletController extends Controller
 		));
 	}
 
-	public function actionLoadUserContacts()
-	{
-		//carico i contatti dell'utente
-		$criteria = new CDbCriteria();
-		$criteria->compare('id_user',Yii::app()->user->objUser['id_user'],false);
-		$dataProvider=new CActiveDataProvider('Contacts',array(
-			'criteria' => $criteria,
-			'pagination' => array(
-				'pageSize' => 10,
-			),
-		));
-
-		$this->renderPartial('contacts', array('dataProvider' => $dataProvider));
-	}
 
 
 	/**
