@@ -1,6 +1,6 @@
 <?php
 
-$libsPath = dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../packages';
+$libsPath = dirname(__FILE__).DIRECTORY_SEPARATOR.'../../../fidelize-packages';
 Yii::setPathOfAlias('libs', $libsPath);
 
 // This is the configuration for yiic console application.
