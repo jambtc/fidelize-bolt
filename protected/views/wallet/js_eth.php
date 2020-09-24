@@ -156,7 +156,8 @@ $(function(){
 				$( ".__sending_now-"+data.id_token+' a span').removeClass( "incorso" );
 				$( ".__sending_now-"+data.id_token+' a span').removeClass( "btn-outline-secondary" );
 				$( ".__sending_now-"+data.id_token+' a span').removeClass( "btn-success" );
-				$( ".__sending_now-"+data.id_token+' a span').addClass( "btn btn-outline-success smallPadding" );
+				//$( ".__sending_now-"+data.id_token+' a span').addClass( "btn btn-outline-success smallPadding" );
+				$( ".__sending_now-"+data.id_token+' a span').addClass( "btn-outline-success" );
 
 				$( ".__sending_now_price-"+data.id_token ).html(data.token_price_wsymbol);
 

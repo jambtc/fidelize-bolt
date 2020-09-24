@@ -58,50 +58,26 @@ $myBlockchain = <<<JS
                 if (data.diff < 2)
                   $('.sync-star').addClass('text-success fa-spin');
 
-                if (data.diff < 240){
+                if (data.diff >=2 && data.diff < 240){
                   $('.sync-difference').html('');
                   $('.blockchain-pairing__loading').remove();
+                  $('.sync-star').removeClass('text-success fa-spin');
                 }
-                
+
 
                 if (data.diff > 240){ // 1 ora
                   $('.sync-blockchain').html('<div class="blockchain-pairing__loading"><center><img width=15 src="'+ajax_loader_url+'" alt="'+Yii.t('js','loading...')+'"></center></div>');
                   $('.sync-difference').html('<small>'+Yii.t('js','Synchronizing the blockchain: {number} blocks left.', {number:data.diff})+'</small>');
                 }
-              //   //if ('serviceWorker' in navigator && 'SyncManager' in window){
-            	// 		//navigator.serviceWorker.ready.then(function(sw) {
-        						var post = {
-        							id: new Date().toISOString(), // id of indexedDB
-        							url		: '{$urlBlockchain}', // url checkTransactions
-                      search_address: my_address, // indirizzo da controllare
-                      chainBlock: data.chainBlocknumber,
-        						};
-                    writeData('sync-blockchain', post).then(function() {
-                      blockchain.callRegisterSyncBlockchain(my_address);
-                    });
-              //
-        			// 			writeData('sync-blockchain', post)
-        			// 				.then(function(response) {
-              //           // console.log('[blockchain: sync] event register:', post);
-        			// 					//return sw.sync.register('sync-blockchain');
-              //           return response;
-              //           //return navigator.serviceWorker.sync.register('sync-blockchain');
-        			// 				})
-              //         .then(function(){
-              //           navigator.serviceWorker.ready.then(function(sw) {
-              //             console.log('[blockchain: sync] event register:', post);
-              //             return sw.sync.register('sync-blockchain');
-              //           });
-              //         })
-        			// 				.catch(function(err) {
-        			// 					console.log(err);
-        			// 			  });
-            	// 		//});
-              //   //}else{
-              //     // RICHIEDO LA FUNZINOE POST tramite ajax
-              //
-              // //  }
-
+    						var post = {
+    							id: new Date().toISOString(), // id of indexedDB
+    							url		: '{$urlBlockchain}', // url checkTransactions
+                  search_address: my_address, // indirizzo da controllare
+                  chainBlock: data.chainBlocknumber,
+    						};
+                writeData('sync-blockchain', post).then(function() {
+                  blockchain.callRegisterSyncBlockchain(my_address);
+                });
               }else{
                 $('.sync-difference').html('');
                 $('.blockchain-pairing__loading').remove();
@@ -118,7 +94,6 @@ $myBlockchain = <<<JS
               if (typeof data[0] !== 'undefined') {
                 blockchain.readTransactions(my_address);
               }else{
-                //$('.sync-star').removeClass('text-success fa-spin');
                 setTimeout(function(){ blockchain.sync(my_address) }, 7000);
               }
             });
