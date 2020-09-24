@@ -17,11 +17,13 @@
  * NOTE, this file must be saved in UTF-8 encoding.
  */
 return array (
+  'You generated a new invoice.' => 'Hai generato una nuova richiesta di pagamento.',
+  'You generated a new token invoice.' => 'Hai generato una nuova richiesta di pagamento.',
   'New transaction'=>'Nuova transazione',
   'A transaction has been completed.' => 'Una transazione è stata completata.',
-        '{application} - Contact' => '{application} - Contatto',
-        '{application} - Password Reset' => '{application} - Reset password',
-        '{application} - User signup' => '{application} - Registrazione utente',
+  '{application} - Contact' => '{application} - Contatto',
+  '{application} - Password Reset' => '{application} - Reset password',
+  '{application} - User signup' => '{application} - Registrazione utente',
   'A transaction you "{alias}" has been completed.' => '@@Una transazione che hai "{alias}" è stata completata.@@',
   'You have "{alias}" a new transaction.' => '@@Hai "{alias}" una nuova transazione.@@',
   'received' => '@@ricevuto@@',
