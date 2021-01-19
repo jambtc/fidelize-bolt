@@ -4,7 +4,7 @@ Yii::import('libs.NaPacks.Settings');
 Yii::import('libs.NaPacks.SaveModels');
 Yii::import('libs.NaPacks.Save');
 
-require_once Yii::app()->params['libsPath'] . '/oauth/telegram/login.php';
+require_once Yii::app()->params['libsPath'] . '/OAuth/oauth-telegram/login.php';
 
 class TelegramController extends Controller
 {
