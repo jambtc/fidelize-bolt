@@ -278,9 +278,12 @@ class WalletERC20Controller extends Controller
 
 		$memo = $_POST['memo'];
 
-		$gasPosted = ($_POST['gas'] > 0) ? $_POST['gas'] : 1 ;
+		if (!(isset($_POST['gas'])) || $_POST['gas'] <= 0){
+			$pow = 0.00021 * pow(10,10);
+		}else{
+			$pow = $_POST['gas'] * pow(10,10);
+		}
 
-		$pow = $gasPosted * pow(10,10);
 		$hex = dechex($pow);
 		$gas = '0x'.$hex;
 
