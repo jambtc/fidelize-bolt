@@ -104,12 +104,28 @@ class WalletController extends Controller
 
 		// carico il wallet selezionato nei settings
 		$settings=Settings::loadUser(Yii::app()->user->objUser['id_user']);
-		if (empty($settings->id_wallet)){
-			$from_address = '0x0000000000000000000000000000000000000000';
-		}else{
+
+		if (!empty($settings->id_wallet)){
 			$wallet = Wallets::model()->findByPk($settings->id_wallet);
-			$from_address = $wallet->wallet_address;
+			if (null !== $wallet){
+				$from_address = $wallet->wallet_address;
+			}else{
+				$from_address = '0x0000000000000000000000000000000000000000';
+			}
+		}else{
+			$from_address = '0x0000000000000000000000000000000000000000';
 		}
+
+
+
+		// if (empty($settings->id_wallet)){
+		// 	$from_address = '0x0000000000000000000000000000000000000000';
+		// }else{
+		// 	$wallet = Wallets::model()->findByPk($settings->id_wallet);
+		// 	if (null === $wallet)
+		//
+		// 	$from_address = $wallet->wallet_address;
+		// }
 
 		$modelc->from_address = $from_address;
 
